@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { getBooks } from "../lib/books";
 import { Book } from "../types/database";
-import { Text, FlatList, View } from "react-native";
+import { Text, FlatList, View, Button } from "react-native";
 
-export default function LibraryScreen() {
+export default function LibraryScreen({ navigation }: any) {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,6 +13,17 @@ export default function LibraryScreen() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions(
+      {
+        headerRight: () => (
+          <Button title="+" onPress={() => navigation.navigate("AddBook")} />
+        ),
+      },
+      [navigation]
+    );
+  });
 
   if (loading) return <Text>Loading...</Text>;
 
